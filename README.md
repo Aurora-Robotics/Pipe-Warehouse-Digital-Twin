@@ -1,5 +1,6 @@
 # 🏭 Pipe Warehouse Digital Twin  
 **Aurora Robotics – Internal R&D Project**
+- **Lead Contributor:** [Abdullahi Abdulmumeen](https://www.linkedin.com/in/abdulmumeen-abdullahi-olalekan/) (Aurora Intern)
 
 ---
 
