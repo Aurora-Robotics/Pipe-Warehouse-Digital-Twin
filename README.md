@@ -1,6 +1,73 @@
-# Pipe Warehouse Digital Twin
+# 🏭 Pipe Warehouse Digital Twin  
+**Aurora Robotics – Internal R&D Project**
 
-## 📌 Project Overview
+---
+
+## 📌 Project Vision
+
+This project is part of an **internal Aurora Robotics research initiative** focused on building a **simulation-first digital twin of an industrial pipe warehouse** for autonomous inspection.
+
+The long-term objective is to enable **robotics and computer vision systems**—specifically **aerial drones**—to autonomously navigate a pipe warehouse, **detect, classify, and count pipes** stored in dense industrial racks.
+
+To achieve this in a robust and scalable way, the project follows a layered approach:
+
+1. **High-fidelity factory modeling (this repository)**  
+2. Physics-based simulation  
+3. Robot navigation and autonomy  
+4. Vision-based pipe detection and inventory estimation  
+
+This repository represents **Phase 1: Environment & Factory Modeling**.
+
+![Front view of pipe stacks](images/front_view.jpeg)
+
+![Isometric view of pipe racks](images/isometric_view.jpeg)
+
+---
+
+## 🧱 Scope of This Repository (Read This First)
+
+⚠️ **This repository contains ONLY the CAD model of the factory environment.**
+
+It does **not** include:
+- Robot or drone models  
+- Sensors or cameras  
+- Simulation physics  
+- Computer vision pipelines  
+- Control or autonomy logic  
+
+Its purpose is to act as a **ground-truth digital representation of the pipe warehouse**, which future Aurora robotics projects will build upon.
+
+> In short: **this repo defines the world before the robot exists.**
+
+---
+
+## 🏗️ What Is Modeled in This Digital Twin?
+
+This repository contains a **high-fidelity SolidWorks digital twin** of an industrial pipe warehouse, including:
+
+### ✔ Pipe Inventory
+- Multiple **pipe lengths**
+- Different **cross-sections and dimensions**
+- High-density storage configurations
+
+### ✔ Rack Systems
+- Modular rack designs
+- Different rack heights and orientations
+- Realistic industrial storage geometry
+
+### ✔ Warehouse Layout
+- Structured aisles suitable for robotic navigation
+- Consistent global reference frames
+- Scalable layout for simulation and autonomy research
+
+The environment is intentionally designed to reflect **real inspection challenges**, including:
+- Occlusion
+- Dense packing
+- Mixed pipe sizes
+- Complex spatial arrangements
+
+---
+## 📌 Repo Overview
 
 This repository contains high-fidelity **3D CAD models and assemblies** representing an industrial pipe warehouse environment. Designed in **SolidWorks**, the project serves as a simulation-ready digital twin for autonomous robotics testing, path planning validation, and warehouse logistics optimization.
 
@@ -39,42 +106,85 @@ The file naming convention follows the logic: `[Rows]x[Columns]__[PipeLength]`.
 └── .gitignore                      (Filters SW lock files & temp data)
 ```
 
-## ⚙️ Design Methodology & Technical Challenges
-### 1. High-Density Inventory Simulation (Linear Patterns)
-To simulate a realistic warehouse without crashing the system, I avoided manually placing thousands of items.
-* **Solution:** Modeled a single `Pipe.SLDPRT` and utilized **Linear Component Patterns** to populate racks with 200+ instances each.
-* **Optimization:** Enabled **"Geometry Pattern"** to reduce rebuild time by strictly copying geometry rather than recalculating feature logic for every instance.
+## 👁️ Model Views & Visual References
 
-### 2. Large Assembly Management (>3,000 Parts)
-The full environment contains thousands of pipe instances, which initially caused significant lag.
-* **Lightweight Mode:** Configured the Master Assembly to load components as 'Lightweight' (loading precise geometry on-demand) instead of keeping full parametric feature history in RAM. This maintains 100% geometric accuracy for simulation while drastically reducing memory usage.
-* **CAM Data Conflict:** Diagnosed and resolved a conflict where SolidWorks CAM attempted to process lightweight parts, causing errors.
-    * **Fix:** Disabled the CAM Add-In to prioritize layout performance.
+Below are selected views from the current CAD model showing the warehouse layout, rack organization, and pipe varieties.
 
-### 3. Layout Architecture & Mating Logic
-Precise positioning was critical for robot navigation paths. I moved away from "Daisy Chaining" (mating Rack B to Rack A), which causes instability.
-* **Global Reference System:** Anchored the first rack (Fixed state) as the "World Origin."
-* **Row Logic:** Utilized **Distance Mates** (e.g., 35m aisle spacing) referenced against the Master Front Plane. This prevents "floating" rows and ensures that deleting one rack does not destroy the entire row's alignment.
-* **Flush Alignment:** Applied Coincident Mates to the Front Faces (not edges) of racks to ensure a perfectly straight "Pick Line" for autonomous agents.
+> 📁 **All images are stored in the `/images` directory.**
 
-### 4. Troubleshooting & Recovery
-During the assembly process, several "Over Defined" and "Circular Reference" errors occurred when new mates conflicted with existing floor plan sketches.
-* **Resolution:** Adopted a "Float & Fix" strategy—breaking conflicting floor anchors before applying new distance mates, and using the "View Mates" tool to isolate and delete hidden "Ghost Mates."
+### 🟦 Isometric View – Full Rack & Pipe Assembly
+Shows the overall spatial arrangement of racks and pipe inventory.
 
-## 🚀 How to Open
-### 1. Clone the Repo
-```bash
-git clone [https://github.com/abdulmumeen-abdullahi/Pipe-Warehouse-Digital-Twin.git](https://github.com/abdulmumeen-abdullahi/Pipe-Warehouse-Digital-Twin.git)
-```
-
-### 2. Open in SolidWorks
-1. Launch **SolidWorks 2024** (or compatible version).
-2. **Crucial Step:** Go to `System Options > Performance` and ensure **"Automatically load components lightweight"** is CHECKED.
-3. Open `General_Assembly.SLDASM`.
-
-### 3. Visualization
-* If the view looks "slanted," use `Alt + Left/Right Arrow` to straighten the horizon.
-* Use `Ctrl + 7` for standard Isometric view.
+![Isometric view of pipe racks](images/isometric_view.jpeg)
 
 ---
-**Created by Abdullahi Olalekan Abdulmumeen**
+
+### 🟦 Front View – Pipe Stacking & Rack Geometry
+Highlights pipe stacking logic, rack heights, and spacing.
+
+![Front view of pipe stacks](images/front_view.jpeg)
+
+---
+
+### 🟦 Angled View – Depth & Occlusion Representation
+Demonstrates depth complexity and occlusion challenges relevant to vision systems.
+
+![Angled view of warehouse layout](images/angled_view.jpeg)
+
+---
+
+### 🟦 Top View – Warehouse Layout & Aisle Planning
+Useful for future navigation, path planning, and mapping.
+
+![Top view of warehouse layout](images/top_view.jpeg)
+
+---
+
+### 🟦 Individual Pipe Variants
+Different pipe lengths and geometries used across the warehouse.
+
+![Pipe variants](images/pipe_variants.jpeg)
+
+---
+
+## 🛠️ Tools & Design Approach
+
+- **CAD Software:** SolidWorks 2024  
+- **Assembly Strategy:** Large-assembly-safe design  
+- **Performance Techniques:**
+  - Linear Component Patterns
+  - Geometry Patterns
+  - Lightweight component loading
+  - Pack & Go consolidation (zero broken references)
+
+The model is optimized to remain **simulation-ready** without overwhelming standard engineering hardware.
+
+---
+
+## 🚀 How This Fits into Aurora’s Roadmap
+
+This digital twin will later be used to:
+- Import into robotics simulators (Gazebo / Isaac / custom)
+- Design drone navigation paths
+- Develop perception and counting algorithms
+- Benchmark vision robustness under occlusion
+- Enable simulation-to-reality transfer
+
+Future phases will **extend this environment**, not replace it.
+
+---
+
+
+
+## 🧭 Project Status
+
+- **Current Phase:** CAD & Environment Modeling  
+- **Next Phase:** Simulation Integration  
+- **Project Type:** Aurora Internal R&D  
+- **Lead Contributor:** Abdullahi (Aurora Intern)
+
+---
+
+## 🧠 Summary
+
+> *We are building the world first — then teaching robots how to understand it.*
