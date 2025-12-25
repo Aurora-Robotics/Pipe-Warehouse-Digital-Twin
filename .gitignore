@@ -1,0 +1,27 @@
+# --- SolidWorks Temporary & Lock Files (Must Ignore) ---
+# These are created when a file is open. Never commit these.
+~$*
+*.sldprt.lock
+*.sldasm.lock
+*.slddrw.lock
+
+# --- Backup and Recovery Files ---
+*.BAK
+*.SWB
+*.swr
+*.sav
+*.recover
+
+# --- Temporary System Files ---
+Thumbs.db
+Desktop.ini
+
+# --- Report & Log Files ---
+*.log
+*.txt
+!README.md
+# (The line above keeps README.md but ignores random log txt files)
+
+# --- SolidWorks CAM / Simulation Temp Files ---
+*.cwr
+*.sim
